@@ -8,4 +8,3 @@ class PermissionCollectionDTO
         return ['permissions' => $this->permissions];
     }
 }
-// 123

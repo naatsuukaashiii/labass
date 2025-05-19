@@ -31,6 +31,10 @@ class PermissionSeeder extends Seeder
             'soft-delete-permission-from-role' => 'Soft Delete Permission from Role',
             'restore-permission-to-role' => 'Restore Permission to Role',
             'get-users-with-role' => 'Get User with role',
+            'get-story-user' => 'Get User History',
+            'get-story-role' => 'Get Role History',
+            'get-story-permission' => 'Get Permission History',
+            'restore-entity-state' => 'restore-entity-state',
         ];
         foreach ($specificPermissions as $code => $name) {
             Permission::create([

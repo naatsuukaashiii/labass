@@ -68,3 +68,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{id}/restore', [PermissionController::class, 'restore'])->name('permission.restore');
     });
 });
+
+use App\Http\Controllers\ChangeLogController;
+
+Route::prefix('ref')->middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('user/{userId}/story')->group(function () {
+        Route::get('/', [ChangeLogController::class, 'getUserHistory'])->name('user.history');
+    });
+    Route::prefix('/policy/role/{roleId}/story')->group(function () {
+        Route::get('/', [ChangeLogController::class, 'getRoleHistory'])->name('role.history');
+    });
+    Route::prefix('/policy/permission/{permissionId}/story')->group(function () {
+        Route::get('/', [ChangeLogController::class, 'getPermissionHistory'])->name('permission.history');
+    });
+    Route::post('/change-log/{logId}/restore', [ChangeLogController::class, 'restoreEntityState'])->name('change-log.restore');
+});
