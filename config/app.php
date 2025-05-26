@@ -125,4 +125,5 @@ return [
     ],
 
     'two_factor_code_expiration' => env('TWO_FACTOR_CODE_EXPIRATION', 10),
+    'git_secret_key' => env('GIT_SECRET_KEY'),
 ];

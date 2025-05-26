@@ -91,3 +91,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/generate-2fa/{userId}', [AuthController::class, 'requestTwoFactorCode'])->name('auth.generate-2fa');
     Route::post('/confirm-2fa', [AuthController::class, 'confirmTwoFactorCode'])->name('auth.confirm-2fa');
 });
+
+
+use App\Http\Controllers\GitHookController;
+
+Route::post('/hooks/git', [GitHookController::class, 'handle'])->name('git.hook');
