@@ -83,3 +83,11 @@ Route::prefix('ref')->middleware(['auth:sanctum'])->group(function () {
     });
     Route::post('/change-log/{logId}/restore', [ChangeLogController::class, 'restoreEntityState'])->name('change-log.restore');
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/auth/toggle-2fa', [AuthController::class, 'toggleTwoFactorAuth']);
+});
+Route::prefix('auth')->group(function () {
+    Route::post('/generate-2fa/{userId}', [AuthController::class, 'requestTwoFactorCode'])->name('auth.generate-2fa');
+    Route::post('/confirm-2fa', [AuthController::class, 'confirmTwoFactorCode'])->name('auth.confirm-2fa');
+});
