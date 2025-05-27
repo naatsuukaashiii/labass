@@ -9,24 +9,24 @@ class GitHookController extends Controller
     public function handle(Request $request)
     {
         if ($this->isUpdateInProgress()) {
-            return response()->json(['message' => 'Обновление уже запущено. Пожалуйста, повторите попытку позже.'], 423);
+            return response()->json(['message' => 'Update is already in progress. Please try again later.'], 423);
         }
         $this->lockUpdate();
 
         try {
             $secretKey = $request->input('secret_key');
             if ($secretKey !== config('app.git_secret_key')) {
-                return response()->json(['message' => 'Недопустимый секретный ключ'], 403);
+                return response()->json(['message' => 'Invalid secret key'], 403);
             }
             $ip = $request->ip();
             Log::info("Git hook triggered by IP: $ip");
             $this->switchToMainBranch();
             $this->discardChanges();
             $this->pullLatestChanges();
-            return response()->json(['message' => 'Проект успешно обновлен'], 200);
+            return response()->json(['message' => 'Project updated successfully'], 200);
         } catch (\Exception $e) {
-            Log::error("Ошибка во время обновления git: " . $e->getMessage());
-            return response()->json(['message' => 'Не удалось обновить проект'], 500);
+            Log::error("Error during git update: " . $e->getMessage());
+            return response()->json(['message' => 'Failed to update project'], 500);
         } finally {
             $this->unlockUpdate();
         }
@@ -49,24 +49,23 @@ class GitHookController extends Controller
     {
         exec('git checkout main 2>&1', $output, $exitCode);
         if ($exitCode !== 0) {
-            throw new \Exception("Не удалось переключиться на основную ветку: " . implode("\n", $output));
+            throw new \Exception("Failed to switch to main branch: " . implode("\n", $output));
         }
-        Log::info("Переключился на основную ветку");
+        Log::info("Switched to main branch");
     }
     private function discardChanges()
     {
         exec('git reset --hard HEAD 2>&1', $output, $exitCode);
         if ($exitCode !== 0) {
-            throw new \Exception("Не удалось отменить изменения: " . implode("\n", $output));
+            throw new \Exception("Failed to discard changes: " . implode("\n", $output));
         }
-        Log::info("Отменил все изменения");
+        Log::info("Discarded all changes");
     }
-    private function pullLatestChanges()
-    {
-        exec('git pull origin main 2>&1', $output, $exitCode);
+    private function pullLatestChanges() {
+        exec('git -C ' . base_path() . ' pull origin main 2>&1', $output, $exitCode);
         if ($exitCode !== 0) {
-            throw new \Exception("Не удалось извлечь последние изменения: " . implode("\n", $output));
+            throw new \Exception("Git pull failed: " . implode("\n", $output));
         }
-        Log::info("Извлек последние изменения из репозитория");
+        Log::info("Git output: " . implode("\n", $output));
     }
 }

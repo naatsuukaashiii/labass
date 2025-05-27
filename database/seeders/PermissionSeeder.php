@@ -34,7 +34,10 @@ class PermissionSeeder extends Seeder
             'get-story-user' => 'Get User History',
             'get-story-role' => 'Get Role History',
             'get-story-permission' => 'Get Permission History',
-            'restore-entity-state' => 'restore-entity-state',
+            'restore-entity-state' => 'Restore-entity-state',
+            'get-list-log-request' => 'Get list of log requests',
+            'read-log-request' => 'Read specific log request',
+            'delete-log-request' => 'Delete specific log request',
         ];
         foreach ($specificPermissions as $code => $name) {
             Permission::create([

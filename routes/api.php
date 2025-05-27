@@ -96,3 +96,13 @@ Route::prefix('auth')->group(function () {
 use App\Http\Controllers\GitHookController;
 
 Route::post('/hooks/git', [GitHookController::class, 'handle'])->name('git.hook');
+
+use App\Http\Controllers\LogRequestController;
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('ref/log/request')->group(function () {
+        Route::get('/', [LogRequestController::class, 'index'])->name('log-request.index');
+        Route::get('/{id}', [LogRequestController::class, 'show'])->name('log-request.show');
+        Route::delete('/{id}', [LogRequestController::class, 'destroy'])->name('log-request.destroy');
+    });
+});
